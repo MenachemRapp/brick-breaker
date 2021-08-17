@@ -33,6 +33,7 @@ SCROLL = 2
 RIGHT = 3
 
 mouse_pos_list = []
+prev_mouse_point=[]
 finish = False
 while not finish:
     for event in pygame.event.get():
@@ -45,6 +46,15 @@ while not finish:
             if event.key == pygame.K_a:
                 ball_x_pos = 0
                 ball_y_pos = 0
+             if event.key == pygame.K_right:
+                ball_x_pos += 4
+             if event.key == pygame.K_left:
+                ball_x_pos -= 4
+            if event.key == pygame.K_up:
+                ball_y_pos += 4
+            if event.key == pygame.K_down:
+                ball_y_pos -= 4
+
 
 
 
@@ -61,6 +71,8 @@ while not finish:
 
     pygame.draw.circle(screen, WHITE, [ball_x_pos, ball_y_pos], 32)
     mouse_point = pygame.mouse.get_pos()
+    if 0>mouse_point[0]>END_X and 0>mouse_point[1]>END_Y and mouse_point!=prev_mouse_point:
+        prev_mouse_point=mouse_point
     screen.blit(player_image, (mouse_point[0] - 50, mouse_point[1] - 50))
     for i in mouse_pos_list:
         screen.blit(player_image, (i[0]-50,i[1]-50))
