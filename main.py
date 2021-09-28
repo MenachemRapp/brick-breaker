@@ -48,8 +48,21 @@ RIGHT = 3
 
 mouse_pos_list = []
 prev_mouse_point = (0, 0)
+showing_mouse_point=[0,0]
 finish = False
 while not finish:
+
+    # enables position to move continuously with the keyboard
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_UP]:
+        showing_mouse_point[1] -= 2
+    if keys[pygame.K_DOWN]:
+        showing_mouse_point[1] += 2
+    if keys[pygame.K_RIGHT]:
+        showing_mouse_point[0] += 2
+    if keys[pygame.K_LEFT]:
+        showing_mouse_point[0] -= 2
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finish = True
@@ -58,22 +71,25 @@ while not finish:
             mouse_pos_list.append(pygame.mouse.get_pos())
 
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                mouse_pos_list=[]
             if event.key == pygame.K_a:
                 ball_x_pos = 0
                 ball_y_pos = 0
-            if event.key == pygame.K_RIGHT:
-                ball_x_pos += 4
+            # discrete version
+            """if event.key == pygame.K_RIGHT:
+                showing_mouse_point[0] += 4
             if event.key == pygame.K_LEFT:
-                ball_x_pos -= 4
+                showing_mouse_point[0] -= 4
             if event.key == pygame.K_UP:
-                ball_y_pos -= 4
+                showing_mouse_point[1] -= 4
             if event.key == pygame.K_DOWN:
-                ball_y_pos += 4
+                showing_mouse_point[1] += 4"""
 
     # reset background image
     screen.blit(img, (0, 0))
 
-    screen.blit(player_image, [220, 300])
+    #screen.blit(player_image, [220, 300])
 
     # ball moves automatically
     ball_x_pos += 1
@@ -86,9 +102,11 @@ while not finish:
 
     #if 0 >= mouse_point[0] >= WINDOW_WIDTH and 0 >= mouse_point[1] >= WINDOW_HEIGHT and mouse_point != prev_mouse_point:
     if mouse_point != prev_mouse_point:
-       prev_mouse_point = mouse_point
+        prev_mouse_point = mouse_point
+        showing_mouse_point= list(mouse_point)
 
-    screen.blit(player_image, (prev_mouse_point[0] - 50, prev_mouse_point[1] - 50))
+
+    screen.blit(player_image, (showing_mouse_point[0] - 50, showing_mouse_point[1] - 50))
 
     for i in mouse_pos_list:
         screen.blit(player_image, (i[0] - 50, i[1] - 50))
