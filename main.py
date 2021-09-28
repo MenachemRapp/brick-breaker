@@ -1,39 +1,53 @@
-
 import pygame
 import math
 
+# screen params
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 600
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+LAV = (200, 191, 231)  # lavender
+IMAGE = 'tiles.png'  # background image
+REFRESH_RATE = 60
+
+# init class
 pygame.init()
 
+# set screen
 size = (WINDOW_WIDTH, WINDOW_HEIGHT)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("My Game")
 
-WHITE = (255, 255, 255)
+# color background
 screen.fill(WHITE)
 
-IMAGE = 'tiles.png'
+# image background
+img = pygame.image.load(IMAGE)
+screen.blit(img, (0, 0))
 
+pygame.display.flip()
 
-RED = (255, 0, 0)
+# set mouse image - later will be set to mouse location
+pygame.mouse.set_visible(False)
+player_image = pygame.image.load('player.png').convert()
+player_image.set_colorkey(LAV)
+
+# draw red circle -not used
 for i in range(0, 359, 4):
-    pygame.draw.line(screen, RED, [300, 300], [300+270*math.sin(math.radians(i)), 300+270*math.cos(math.radians(i))], 1)
+    pygame.draw.line(screen, RED, [300, 300],
+                     [300 + 270 * math.sin(math.radians(i)), 300 + 270 * math.cos(math.radians(i))], 1)
+pygame.display.flip()
 
-LAV = (200, 191, 231)
-
-REFRESH_RATE = 60
 clock = pygame.time.Clock()
 ball_x_pos = 0
 ball_y_pos = 0
 
-pygame .mouse.set_visible(False)
 LEFT = 1
 SCROLL = 2
 RIGHT = 3
 
 mouse_pos_list = []
-prev_mouse_point=[]
+prev_mouse_point = (0, 0)
 finish = False
 while not finish:
     for event in pygame.event.get():
@@ -42,43 +56,44 @@ while not finish:
         elif event.type == pygame.MOUSEBUTTONDOWN \
                 and event.button == LEFT:
             mouse_pos_list.append(pygame.mouse.get_pos())
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 ball_x_pos = 0
                 ball_y_pos = 0
-             if event.key == pygame.K_right:
+            if event.key == pygame.K_RIGHT:
                 ball_x_pos += 4
-             if event.key == pygame.K_left:
+            if event.key == pygame.K_LEFT:
                 ball_x_pos -= 4
-            if event.key == pygame.K_up:
-                ball_y_pos += 4
-            if event.key == pygame.K_down:
+            if event.key == pygame.K_UP:
                 ball_y_pos -= 4
+            if event.key == pygame.K_DOWN:
+                ball_y_pos += 4
 
-
-
-
-    img = pygame.image.load(IMAGE)
+    # reset background image
     screen.blit(img, (0, 0))
-    player_image = pygame.image.load('player.png').convert()
-    player_image.set_colorkey(LAV)
+
     screen.blit(player_image, [220, 300])
 
+    # ball moves automatically
     ball_x_pos += 1
     ball_y_pos += 1
-
-
-
     pygame.draw.circle(screen, WHITE, [ball_x_pos, ball_y_pos], 32)
+
+    # show mouse's current location
     mouse_point = pygame.mouse.get_pos()
-    if 0>mouse_point[0]>END_X and 0>mouse_point[1]>END_Y and mouse_point!=prev_mouse_point:
-        prev_mouse_point=mouse_point
-    screen.blit(player_image, (mouse_point[0] - 50, mouse_point[1] - 50))
+    #print(mouse_point)
+
+    #if 0 >= mouse_point[0] >= WINDOW_WIDTH and 0 >= mouse_point[1] >= WINDOW_HEIGHT and mouse_point != prev_mouse_point:
+    if mouse_point != prev_mouse_point:
+       prev_mouse_point = mouse_point
+
+    screen.blit(player_image, (prev_mouse_point[0] - 50, prev_mouse_point[1] - 50))
+
     for i in mouse_pos_list:
-        screen.blit(player_image, (i[0]-50,i[1]-50))
+        screen.blit(player_image, (i[0] - 50, i[1] - 50))
 
     pygame.display.flip()
     clock.tick(REFRESH_RATE)
-
 
 pygame.quit()
