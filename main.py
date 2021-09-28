@@ -9,9 +9,15 @@ RED = (255, 0, 0)
 LAV = (200, 191, 231)  # lavender
 IMAGE = 'tiles.png'  # background image
 REFRESH_RATE = 60
+SOUND_FILE = "guitar.mp3" #sound file
+
 
 # init class
 pygame.init()
+
+# sound init
+pygame.mixer.init()
+pygame.mixer.music.load(SOUND_FILE)
 
 # set screen
 size = (WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -28,7 +34,7 @@ screen.blit(img, (0, 0))
 pygame.display.flip()
 
 # set mouse image - later will be set to mouse location
-pygame.mouse.set_visible(False)
+# pygame.mouse.set_visible(False)
 player_image = pygame.image.load('player.png').convert()
 player_image.set_colorkey(LAV)
 
@@ -66,9 +72,11 @@ while not finish:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finish = True
-        elif event.type == pygame.MOUSEBUTTONDOWN \
-                and event.button == LEFT:
-            mouse_pos_list.append(pygame.mouse.get_pos())
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == LEFT:
+                mouse_pos_list.append(pygame.mouse.get_pos())
+            elif event.button == RIGHT:
+                pygame.mixer.music.play()
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
