@@ -45,16 +45,6 @@ def main():
     player_image = pygame.image.load('player.png').convert()
     player_image.set_colorkey(LAV)
 
-    # draw red circle -not used
-    for i in range(0, 359, 4):
-        pygame.draw.line(screen, RED, [300, 300],
-                         [300 + 270 * math.sin(math.radians(i)), 300 + 270 * math.cos(math.radians(i))], 1)
-    """
-    ball1 = Ball(100, 100)
-    ball2 = Ball(200, 200)
-    screen.blit(ball1.image, ball1.get_pos())
-    screen.blit(ball2.image, ball2.get_pos())
-    """
 
     paddle= Paddle(250,500)
     screen.blit(paddle.image, paddle.get_pos())
@@ -212,6 +202,17 @@ def main():
         brick_list.draw(screen)
 
         pygame.display.flip()
+
+        """
+        if not balls_list:
+            print("Game Over")
+            break
+        """
+
+        if not brick_list:
+            print("victory")
+            break
+
         clock.tick(REFRESH_RATE)
 
     pygame.quit()
