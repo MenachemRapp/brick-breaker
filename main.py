@@ -102,7 +102,7 @@ def main():
                     x, y = paddle.rect.center
                     ball = Ball(x, y-10)
                     vx = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
-                    vy = random.randint(-MAX_VELOCITY, -1a)
+                    vy = random.randint(-MAX_VELOCITY, -1)
                     ball.update_v(vx, vy)
                     balls_list.add(ball)
                     ball_clicked = True
