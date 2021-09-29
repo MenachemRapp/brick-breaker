@@ -4,6 +4,7 @@ import pygame
 import math
 from shots import Ball
 from targets import Brick
+from paddles import Paddle
 
 # screen params
 WINDOW_WIDTH = 600
@@ -55,6 +56,11 @@ def main():
     screen.blit(ball2.image, ball2.get_pos())
     """
 
+    paddle= Paddle(250,500)
+    screen.blit(paddle.image, paddle.get_pos())
+    pygame.display.flip()
+
+
     NUMBER_OF_BALLS_X = 7
     NUMBER_OF_BALLS_Y = 3
     DISTANCE = 80
@@ -91,9 +97,11 @@ def main():
         if keys[pygame.K_DOWN]:
             showing_mouse_point[1] += 2
         if keys[pygame.K_RIGHT]:
-            showing_mouse_point[0] += 2
+            #showing_mouse_point[0] += 2
+            paddle.move_right()
         if keys[pygame.K_LEFT]:
-            showing_mouse_point[0] -= 2
+            paddle.move_left()
+            #showing_mouse_point[0] -= 2
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -157,6 +165,7 @@ def main():
         if mouse_point != prev_mouse_point:
             prev_mouse_point = mouse_point
             showing_mouse_point = list(mouse_point)
+            paddle.update_loc(mouse_point[0]-50)
 
         screen.blit(player_image, (showing_mouse_point[0] - 50, showing_mouse_point[1] - 50))
 
@@ -178,13 +187,17 @@ def main():
             balls_list.add(ball)
         """
         for brick in brick_list:
-            balls_hit_list = pygame.sprite.spritecollide(brick, balls_list, False)
-            if len(balls_hit_list) != 0:
+            brick_hit_list = pygame.sprite.spritecollide(brick, balls_list, False)
+            if len(brick_hit_list) != 0:
                 brick_list.remove(brick)
 
+        screen.blit(paddle.image, paddle.get_pos())
 
 
-
+        for ball in balls_list:
+            if  paddle.get_pos()[1]-4 <= ball.rect.y+20 <=paddle.get_pos()[1]+4\
+                    and paddle.get_pos()[0]-50 <= ball.rect.x+20 <= paddle.get_pos()[0]+50:
+                ball.flip_y_dir()
 
         for ball in balls_list:
             ball.update_loc()
