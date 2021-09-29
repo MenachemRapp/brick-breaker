@@ -2,7 +2,8 @@ import random
 
 import pygame
 import math
-from targets import Ball
+from shots import Ball
+from targets import Brick
 
 # screen params
 WINDOW_WIDTH = 600
@@ -47,24 +48,28 @@ def main():
     for i in range(0, 359, 4):
         pygame.draw.line(screen, RED, [300, 300],
                          [300 + 270 * math.sin(math.radians(i)), 300 + 270 * math.cos(math.radians(i))], 1)
-
+    """
     ball1 = Ball(100, 100)
     ball2 = Ball(200, 200)
     screen.blit(ball1.image, ball1.get_pos())
     screen.blit(ball2.image, ball2.get_pos())
+    """
 
-    NUMBER_OF_BALLS = 7
+    NUMBER_OF_BALLS_X = 7
+    NUMBER_OF_BALLS_Y = 3
     DISTANCE = 80
-    balls_list = pygame.sprite.Group()
+    brick_list = pygame.sprite.Group()
     new_balls_list = pygame.sprite.Group()
-    """
-    for i in range(NUMBER_OF_BALLS):
-        ball = Ball(i * DISTANCE, i * DISTANCE)
-        balls_list.add(ball)
-    balls_list.draw(screen)
-    """
+    for i in range(NUMBER_OF_BALLS_X):
+        for j in range(NUMBER_OF_BALLS_Y):
+            brick = Brick(i * DISTANCE, j * DISTANCE)
+            brick_list.add(brick)
+    brick_list.draw(screen)
+
     pygame.display.flip()
 
+    balls_list = pygame.sprite.Group()
+    #input()
     clock = pygame.time.Clock()
     ball_x_pos = 0
     ball_y_pos = 0
@@ -95,7 +100,7 @@ def main():
                 finish = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == LEFT:
-                    x, y = pygame.mouse.get_pos()
+                    x, y = showing_mouse_point
                     ball = Ball(x - 50, y - 50)
                     vx = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
                     vy = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
@@ -107,11 +112,23 @@ def main():
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    balls_list.empty()
+                    x, y = showing_mouse_point
+                    ball = Ball(x - 50, y - 50)
+                    vx = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
+                    vy = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
+                    ball.update_v(vx, vy)
+                    balls_list.add(ball)
+                    #balls_list.empty()
                     mouse_pos_list = []
                 if event.key == pygame.K_a:
-                    ball_x_pos = 0
-                    ball_y_pos = 0
+                    brick_list.empty()
+                    for i in range(NUMBER_OF_BALLS_X):
+                        for j in range(NUMBER_OF_BALLS_Y):
+                            brick = Brick(i * DISTANCE, j * DISTANCE)
+                            brick_list.add(brick)
+                    brick_list.draw(screen)
+
+
                 # discrete version
                 """if event.key == pygame.K_RIGHT:
                     showing_mouse_point[0] += 4
@@ -146,7 +163,7 @@ def main():
         """
         for i in mouse_pos_list:
             screen.blit(player_image, (i[0] - 50, i[1] - 50))
-        """
+        
         new_balls_list.empty()
         for ball in balls_list:
             balls_hit_list = pygame.sprite.spritecollide(ball, balls_list, False)
@@ -155,19 +172,31 @@ def main():
 
         balls_list = new_balls_list.copy()
         """
+        """
         balls_list.empty()
         for ball in new_balls_list:
             balls_list.add(ball)
         """
+        for brick in brick_list:
+            balls_hit_list = pygame.sprite.spritecollide(brick, balls_list, False)
+            if len(balls_hit_list) != 0:
+                brick_list.remove(brick)
+
+
+
+
 
         for ball in balls_list:
             ball.update_loc()
             if ball.rect.x+80 > WINDOW_WIDTH or ball.rect.x+10 < 0:
                 ball.flip_x_dir()
-            if ball.rect.y+80 > WINDOW_HEIGHT or ball.rect.y+10 < 0:
+            if ball.rect.y+10 < 0:
                 ball.flip_y_dir()
+            if ball.rect.y - 20 > WINDOW_HEIGHT:
+                balls_list.remove(ball)
 
         balls_list.draw(screen)
+        brick_list.draw(screen)
 
         pygame.display.flip()
         clock.tick(REFRESH_RATE)
