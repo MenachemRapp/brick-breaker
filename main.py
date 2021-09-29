@@ -15,7 +15,7 @@ LAV = (200, 191, 231)  # lavender
 IMAGE = 'tiles.png'  # background image
 REFRESH_RATE = 60
 SOUND_FILE = "guitar.mp3"  # sound file
-MAX_VELOCITY = 10
+MAX_VELOCITY = 7
 
 
 def main():
