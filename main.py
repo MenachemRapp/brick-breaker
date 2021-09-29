@@ -74,6 +74,7 @@ def main():
     SCROLL = 2
     RIGHT = 3
 
+    ball_clicked = False
     mouse_pos_list = []
     prev_mouse_point = (0, 0)
     showing_mouse_point = [0, 0]
@@ -98,12 +99,13 @@ def main():
                 finish = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == LEFT:
-                    x, y = showing_mouse_point
-                    ball = Ball(x - 50, y - 50)
+                    x, y = paddle.rect.center
+                    ball = Ball(x, y-10)
                     vx = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
-                    vy = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
+                    vy = random.randint(-MAX_VELOCITY, -1a)
                     ball.update_v(vx, vy)
                     balls_list.add(ball)
+                    ball_clicked = True
                     # mouse_pos_list.append(pygame.mouse.get_pos())
                 elif event.button == RIGHT:
                     pygame.mixer.music.play()
@@ -185,9 +187,9 @@ def main():
 
 
         for ball in balls_list:
-            if  paddle.get_pos()[1]-4 <= ball.rect.y+20 <=paddle.get_pos()[1]+4\
-                    and paddle.get_pos()[0]-50 <= ball.rect.x+20 <= paddle.get_pos()[0]+50:
-                ball.flip_y_dir()
+            if paddle.rect.center[1]-5 <= ball.rect.bottom <= paddle.rect.center[1]+5\
+                    and paddle.rect.left <= ball.rect.x <= paddle.rect.right:
+                ball.point_up()
 
         for ball in balls_list:
             ball.update_loc()
@@ -198,16 +200,17 @@ def main():
             if ball.rect.y - 20 > WINDOW_HEIGHT:
                 balls_list.remove(ball)
 
+
         balls_list.draw(screen)
         brick_list.draw(screen)
 
         pygame.display.flip()
 
-        """
-        if not balls_list:
+
+        if ball_clicked and not balls_list:
             print("Game Over")
             break
-        """
+
 
         if not brick_list:
             print("victory")
