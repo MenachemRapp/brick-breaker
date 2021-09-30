@@ -7,11 +7,20 @@ HORIZONTAL_VELOCITY = 3
 VERTICAL_VELOCITY = 5
 
 
+def NoBall(param):
+    pass
+
+
+class BallError(Exception):
+    """ball shouldn't exist anymore"""
+    pass
+
+
 class Ball(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Ball, self).__init__()
         new_image = pygame.image.load(MOVING_IMAGE)  # .convert()# _alpha()
-        self.image = pygame.transform.scale(new_image,[20,20]).convert()
+        self.image = pygame.transform.scale(new_image, [20, 20]).convert()
         self.image.set_colorkey(LAV)
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -22,7 +31,6 @@ class Ball(pygame.sprite.Sprite):
     def update_v(self, vx, vy):
         self.__vx = vx
         self.__vy = vy
-
 
     def update_loc(self):
         self.rect.x += self.__vx
@@ -35,7 +43,7 @@ class Ball(pygame.sprite.Sprite):
         return self.__vx, self.__vy
 
     def flip_x_dir(self):
-        self.__vx=-self.__vx
+        self.__vx = -self.__vx
 
     def flip_y_dir(self):
         self.__vy = -self.__vy
@@ -48,3 +56,16 @@ class Ball(pygame.sprite.Sprite):
             self.flip_x_dir()
         if horizontal_hit:
             self.flip_y_dir()
+
+    def hit_side_border(self):
+        self.flip_x_dir()
+
+    def hit_top_border(self):
+        self.flip_y_dir()
+
+    @staticmethod
+    def hit_bottom_border():
+        raise BallError("ball has left the border")
+
+
+    # def ball_removed(self):

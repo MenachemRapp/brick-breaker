@@ -2,7 +2,7 @@ import random
 
 import pygame
 import math
-from shots import Ball
+from shots import *
 from targets import Brick
 from paddles import Paddle
 
@@ -118,7 +118,8 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                finish = True
+                pygame.quit()
+                # finish = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == LEFT:
                     ball_clicked = shoot(paddle, balls_list)
@@ -149,11 +150,14 @@ def main():
         for ball in balls_list:
             ball.update_loc()
             if ball.rect.center[0] > WINDOW_WIDTH or ball.rect.center[0] < 0:
-                ball.flip_x_dir()
+                ball.hit_side_border()
             if ball.rect.y + 10 < 0:
-                ball.flip_y_dir()
+                ball.hit_top_border()
             if ball.rect.y - 20 > WINDOW_HEIGHT:
-                balls_list.remove(ball)
+                try:
+                    ball.hit_bottom_border()
+                except BallError:
+                    balls_list.remove(ball)
 
         # balls hit bricks
         for ball in balls_list:
