@@ -12,6 +12,7 @@ WINDOW_HEIGHT = 600
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 LAV = (200, 191, 231)  # lavender
+BLUE = (0, 0, 128)
 BACKGROUND = 'tiles.png'  # background image
 REFRESH_RATE = 60
 SOUND_FILE = "guitar.mp3"  # sound file
@@ -47,6 +48,28 @@ def ball_hit_brick(ball, brick):
     if ball.rect.centery <= brick.rect.top or ball.rect.centery >= brick.rect.bottom:
         horizontal_hit = True
     ball.hit_brick(vertical_hit, horizontal_hit)
+
+def game_over(screen):
+    font=pygame.font.SysFont('comicsans',  80)
+    text = font.render('Game Over', True, RED, BLUE)
+    screen.blit(text,(140,100))
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+
+def winning(screen):
+    font=pygame.font.SysFont('comicsans',  80)
+    text = font.render('You Won', True, RED, BLUE)
+    screen.blit(text,(160,100))
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
 
 
 def main():
@@ -161,10 +184,12 @@ def main():
 
         if ball_clicked and not balls_list:
             print("Game Over")
+            game_over(screen)
             break
 
         if not brick_list:
             print("victory")
+            winning(screen)
             break
 
         clock.tick(REFRESH_RATE)
