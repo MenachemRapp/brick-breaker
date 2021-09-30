@@ -51,7 +51,7 @@ def ball_hit_brick(ball, brick):
 
 
 def game_over(screen):
-    font = pygame.font.SysFont('comicsans', 80)
+    font = pygame.font.SysFont('ComicSansMS', 80)
     text = font.render('Game Over', True, RED, BLUE)
     screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
     pygame.display.flip()
@@ -59,7 +59,7 @@ def game_over(screen):
 
 
 def winning(screen):
-    font = pygame.font.SysFont('comicsans', 80)
+    font = pygame.font.SysFont('ComicSansMS', 80)
     text = font.render('You Won', True, RED, BLUE)
     screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
     pygame.display.flip()
