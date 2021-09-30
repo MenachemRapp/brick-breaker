@@ -42,3 +42,9 @@ class Ball(pygame.sprite.Sprite):
 
     def point_up(self):
         self.__vy = -abs(self.__vy)
+
+    def hit_brick(self, vertical_hit, horizontal_hit):
+        if vertical_hit:
+            self.flip_x_dir()
+        if horizontal_hit:
+            self.flip_y_dir()

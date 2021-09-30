@@ -12,14 +12,22 @@ WINDOW_HEIGHT = 600
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 LAV = (200, 191, 231)  # lavender
-IMAGE = 'tiles.png'  # background image
+BACKGROUND = 'tiles.png'  # background image
 REFRESH_RATE = 60
 SOUND_FILE = "guitar.mp3"  # sound file
 MAX_VELOCITY = 7
 
+NUMBER_OF_BRICKS_X = 7
+NUMBER_OF_BRICKS_Y = 3
+DISTANCE = 80
 
-def fill_bricks():
-    pass
+
+def fill_bricks(brick_list):
+    brick_list.empty()
+    for i in range(NUMBER_OF_BRICKS_X):
+        for j in range(NUMBER_OF_BRICKS_Y):
+            brick = Brick(i * DISTANCE, j * DISTANCE)
+            brick_list.add(brick)
 
 
 def shoot(paddle, balls_list):
@@ -32,71 +40,66 @@ def shoot(paddle, balls_list):
     return True
 
 
+def ball_hit_brick(ball, brick):
+    horizontal_hit = vertical_hit = False
+    if ball.rect.centerx <= brick.rect.left or ball.rect.centerx >= brick.rect.right:
+        vertical_hit = True
+    if ball.rect.centery <= brick.rect.top or ball.rect.centery >= brick.rect.bottom:
+        horizontal_hit = True
+    ball.hit_brick(vertical_hit, horizontal_hit)
+
+
 def main():
     # init class
     pygame.init()
 
+    """
     # sound init
     pygame.mixer.init()
     pygame.mixer.music.load(SOUND_FILE)
+    """
 
     # set screen
     size = (WINDOW_WIDTH, WINDOW_HEIGHT)
     screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("My Game")
+    pygame.display.set_caption("Breaker")
 
     # image background
-    img = pygame.image.load(IMAGE)
+    img = pygame.image.load(BACKGROUND)
     screen.blit(img, (0, 0))
-
-    pygame.display.flip()
 
     paddle = Paddle(250, 500)
     screen.blit(paddle.image, paddle.get_pos())
-    pygame.display.flip()
 
-    NUMBER_OF_BRICKS_X = 7
-    NUMBER_OF_BRICKS_Y = 3
-    DISTANCE = 80
     brick_list = pygame.sprite.Group()
-    new_balls_list = pygame.sprite.Group()
-    for i in range(NUMBER_OF_BRICKS_X):
-        for j in range(NUMBER_OF_BRICKS_Y):
-            brick = Brick(10 + i * DISTANCE, 10 + j * DISTANCE)
-            brick_list.add(brick)
+    fill_bricks(brick_list)
     brick_list.draw(screen)
 
-    pygame.display.flip()
+    start_ball = Ball(paddle.rect.centerx, paddle.rect.centery - 10)
+    screen.blit(start_ball.image, start_ball.get_pos())
 
     balls_list = pygame.sprite.Group()
-    # input()
+
+    pygame.display.flip()
+
     clock = pygame.time.Clock()
-    ball_x_pos = 0
-    ball_y_pos = 0
 
     LEFT = 1
     SCROLL = 2
     RIGHT = 3
 
     ball_clicked = False
-    mouse_pos_list = []
     prev_mouse_point = (0, 0)
-    showing_mouse_point = [0, 0]
-    finish = False
+
+    finish = False  # quit button was clicked
     while not finish:
 
         # enables position to move continuously with the keyboard
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
-            showing_mouse_point[1] -= 2
-        if keys[pygame.K_DOWN]:
-            showing_mouse_point[1] += 2
         if keys[pygame.K_RIGHT]:
-            # showing_mouse_point[0] += 2
             paddle.move_right()
         if keys[pygame.K_LEFT]:
             paddle.move_left()
-            # showing_mouse_point[0] -= 2
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -111,51 +114,55 @@ def main():
                 if event.key == pygame.K_SPACE:
                     ball_clicked = shoot(paddle, balls_list)
                 if event.key == pygame.K_a:
-                    brick_list.empty()
-                    for i in range(NUMBER_OF_BRICKS_X):
-                        for j in range(NUMBER_OF_BRICKS_Y):
-                            brick = Brick(i * DISTANCE, j * DISTANCE)
-                            brick_list.add(brick)
+                    fill_bricks(brick_list)
                     brick_list.draw(screen)
 
         # reset background image
         screen.blit(img, (0, 0))
-
-        # screen.blit(player_image, [220, 300])
-
-        # ball moves automatically
-        ball_x_pos += 1
-        ball_y_pos += 1
-        pygame.draw.circle(screen, WHITE, [ball_x_pos, ball_y_pos], 32)
 
         # show mouse's current location
         mouse_point = pygame.mouse.get_pos()
 
         if mouse_point != prev_mouse_point:
             prev_mouse_point = mouse_point
-            showing_mouse_point = list(mouse_point)
             paddle.update_loc(mouse_point[0] - 50)
-
-        for brick in brick_list:
-            brick_hit_list = pygame.sprite.spritecollide(brick, balls_list, False)
-            if len(brick_hit_list) != 0:
-                brick_list.remove(brick)
 
         screen.blit(paddle.image, paddle.get_pos())
 
-        for ball in balls_list:
-            if paddle.rect.center[1] - 5 <= ball.rect.bottom <= paddle.rect.center[1] + 5 \
-                    and paddle.rect.left <= ball.rect.center[0] <= paddle.rect.right:
-                ball.point_up()
+        # display the starting position of the ball
+        if not ball_clicked:
+            screen.blit(start_ball.image, (paddle.rect.centerx - 10, paddle.rect.centery - 20))
 
         for ball in balls_list:
             ball.update_loc()
-            if ball.rect.x + 80 > WINDOW_WIDTH or ball.rect.x + 10 < 0:
+            if ball.rect.center[0] > WINDOW_WIDTH or ball.rect.center[0] < 0:
                 ball.flip_x_dir()
             if ball.rect.y + 10 < 0:
                 ball.flip_y_dir()
             if ball.rect.y - 20 > WINDOW_HEIGHT:
                 balls_list.remove(ball)
+
+        for ball in balls_list:
+            ball_brick_hit_list = pygame.sprite.spritecollide(ball, brick_list, False)
+            if ball_brick_hit_list:
+                ball_hit_brick(ball, ball_brick_hit_list[0])
+                """
+                if ball.rect.centerx <= ball_brick_hit_list[0].rect.left \
+                        or ball.rect.centerx >= ball_brick_hit_list[0].rect.right:
+                    ball.flip_x_dir()
+                if ball.rect.centery <= ball_brick_hit_list[0].rect.top \
+                        or ball.rect.centery >= ball_brick_hit_list[0].rect.bottom:
+                    ball.flip_y_dir()
+                """
+
+        for brick in brick_list:
+            brick_hit_list = pygame.sprite.spritecollide(brick, balls_list, False)
+            if brick_hit_list:
+                brick_list.remove(brick)
+
+        ball_paddle_hit_list = pygame.sprite.spritecollide(paddle, balls_list, False)
+        for ball in ball_paddle_hit_list:
+            ball.point_up()
 
         balls_list.draw(screen)
         brick_list.draw(screen)
