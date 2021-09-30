@@ -177,12 +177,10 @@ def main():
         pygame.display.flip()
 
         if ball_clicked and not balls_list:
-            print("Game Over")
             game_over(screen)
             break
 
         if not brick_list:
-            print("victory")
             winning(screen)
             break
 
