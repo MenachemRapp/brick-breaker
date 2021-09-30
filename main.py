@@ -85,8 +85,6 @@ def main():
     clock = pygame.time.Clock()
 
     LEFT = 1
-    SCROLL = 2
-    RIGHT = 3
 
     ball_clicked = False
     prev_mouse_point = (0, 0)
@@ -107,8 +105,6 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == LEFT:
                     ball_clicked = shoot(paddle, balls_list)
-                elif event.button == RIGHT:
-                    pygame.mixer.music.play()
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -142,19 +138,13 @@ def main():
             if ball.rect.y - 20 > WINDOW_HEIGHT:
                 balls_list.remove(ball)
 
+        # balls hit bricks
         for ball in balls_list:
             ball_brick_hit_list = pygame.sprite.spritecollide(ball, brick_list, False)
             if ball_brick_hit_list:
                 ball_hit_brick(ball, ball_brick_hit_list[0])
-                """
-                if ball.rect.centerx <= ball_brick_hit_list[0].rect.left \
-                        or ball.rect.centerx >= ball_brick_hit_list[0].rect.right:
-                    ball.flip_x_dir()
-                if ball.rect.centery <= ball_brick_hit_list[0].rect.top \
-                        or ball.rect.centery >= ball_brick_hit_list[0].rect.bottom:
-                    ball.flip_y_dir()
-                """
 
+        # brick hit by ball
         for brick in brick_list:
             brick_hit_list = pygame.sprite.spritecollide(brick, balls_list, False)
             if brick_hit_list:
