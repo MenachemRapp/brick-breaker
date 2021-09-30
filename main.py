@@ -49,27 +49,21 @@ def ball_hit_brick(ball, brick):
         horizontal_hit = True
     ball.hit_brick(vertical_hit, horizontal_hit)
 
+
 def game_over(screen):
-    font=pygame.font.SysFont('comicsans',  80)
+    font = pygame.font.SysFont('comicsans', 80)
     text = font.render('Game Over', True, RED, BLUE)
-    screen.blit(text,(140,100))
+    screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
     pygame.display.flip()
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+    # TODO add "loose" sound
 
 
 def winning(screen):
-    font=pygame.font.SysFont('comicsans',  80)
+    font = pygame.font.SysFont('comicsans', 80)
     text = font.render('You Won', True, RED, BLUE)
-    screen.blit(text,(160,100))
+    screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
     pygame.display.flip()
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
+    # TODO add "win" sound
 
 
 def main():
@@ -194,7 +188,11 @@ def main():
 
         clock.tick(REFRESH_RATE)
 
-    pygame.quit()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            # TODO add "Play Again" button
 
 
 if __name__ == '__main__':
