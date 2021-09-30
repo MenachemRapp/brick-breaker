@@ -3,7 +3,7 @@ import random
 import pygame
 import math
 from shots import *
-from targets import Brick
+from targets import *
 from paddles import Paddle
 
 # screen params
@@ -27,7 +27,7 @@ def fill_bricks(brick_list):
     brick_list.empty()
     for i in range(NUMBER_OF_BRICKS_X):
         for j in range(NUMBER_OF_BRICKS_Y):
-            brick = Brick(i * DISTANCE, j * DISTANCE)
+            brick = BasicBrick(i * DISTANCE, j * DISTANCE)
             brick_list.add(brick)
 
 
@@ -169,7 +169,10 @@ def main():
         for brick in brick_list:
             brick_hit_list = pygame.sprite.spritecollide(brick, balls_list, False)
             if brick_hit_list:
-                brick_list.remove(brick)
+                try:
+                    brick.hit_action()
+                except BrickError:
+                    brick_list.remove(brick)
 
         ball_paddle_hit_list = pygame.sprite.spritecollide(paddle, balls_list, False)
         for ball in ball_paddle_hit_list:
