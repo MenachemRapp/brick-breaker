@@ -37,7 +37,7 @@ def shoot(paddle, balls_list):
     ball = Ball(x, y - 10)
     vx = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
     vy = random.randint(-MAX_VELOCITY, -1)
-    ball.update_v(vx, vy)
+    # ball.update_v(vx, vy)
     balls_list.add(ball)
     return True
 

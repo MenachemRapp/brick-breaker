@@ -1,14 +1,11 @@
 import pygame
+import math
+import random
 
 LAV = (200, 191, 231)  # lavender
 PINK = (255, 20, 147)
 MOVING_IMAGE = 'player.png'
-HORIZONTAL_VELOCITY = 3
-VERTICAL_VELOCITY = 5
-
-
-def NoBall(param):
-    pass
+BALL_SPEED = 7
 
 
 class BallError(Exception):
@@ -23,10 +20,11 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(new_image, [20, 20]).convert()
         self.image.set_colorkey(LAV)
         self.rect = self.image.get_rect()
+        self.__vy = random.uniform(BALL_SPEED*0.1,BALL_SPEED*0.9)
+        abs_vx = math.sqrt(BALL_SPEED ** 2 - self.__vy ** 2)
+        self.__vx = random.choice([abs_vx,-abs_vx])
         self.rect.x = x
         self.rect.y = y
-        self.__vx = HORIZONTAL_VELOCITY
-        self.__vy = VERTICAL_VELOCITY
 
     def update_v(self, vx, vy):
         self.__vx = vx
@@ -66,6 +64,5 @@ class Ball(pygame.sprite.Sprite):
     @staticmethod
     def hit_bottom_border():
         raise BallError("ball has left the border")
-
 
     # def ball_removed(self):
