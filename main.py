@@ -28,7 +28,12 @@ def fill_bricks(brick_list):
     brick_list.empty()
     for i in range(NUMBER_OF_BRICKS_X):
         for j in range(NUMBER_OF_BRICKS_Y):
-            brick = BasicBrick(i * DISTANCE, j * DISTANCE)
+            brick = BasicBrick(10 + i * DISTANCE, 10 + j * DISTANCE)
+            brick_list.add(brick)
+
+    for i in range(3):
+        for j in range(2):
+            brick = PermanentBrick(50 + i * 200, 50 + j * DISTANCE)
             brick_list.add(brick)
 
 
@@ -193,7 +198,7 @@ def main():
                 game_over(screen)
                 win_or_loose = True
 
-            if not brick_list:
+            if not list(filter(lambda x: x.required, brick_list)):
                 winning(screen)
                 win_or_loose = True
 
