@@ -14,27 +14,29 @@ RED = (255, 0, 0)
 LAV = (200, 191, 231)  # lavender
 BLUE = (0, 0, 128)
 GREEN = (42, 249, 7)
-BACKGROUND = 'tiles.png'  # background image
+BACKGROUND = "images/tiles.png"  # background image
 REFRESH_RATE = 60
 SOUND_FILE = "guitar.mp3"  # sound file
 MAX_VELOCITY = 7
+LEFT = 1
 
-NUMBER_OF_BRICKS_X = 7
-NUMBER_OF_BRICKS_Y = 3
-DISTANCE = 80
+NUMBER_OF_BRICKS_X = 12
+NUMBER_OF_BRICKS_Y = 8
+DISTANCE_X = 50
+DISTANCE_Y = 20
 
 
 def fill_bricks(brick_list):
+    brick_options = [GreenBrick, RedBrick, CyanBrick]
     brick_list.empty()
     for i in range(NUMBER_OF_BRICKS_X):
         for j in range(NUMBER_OF_BRICKS_Y):
-            brick = BasicBrick(10 + i * DISTANCE, 10 + j * DISTANCE)
+            brick = brick_options[(i + j) % len(brick_options)](i * DISTANCE_X, j * DISTANCE_Y)
             brick_list.add(brick)
 
-    for i in range(3):
-        for j in range(2):
-            brick = PermanentBrick(50 + i * 200, 50 + j * DISTANCE)
-            brick_list.add(brick)
+    for i in range(4):
+        brick = PermanentBrick(DISTANCE_X + i * DISTANCE_X * 3, DISTANCE_Y * NUMBER_OF_BRICKS_Y)
+        brick_list.add(brick)
 
 
 def shoot(paddle, balls_list):
@@ -87,6 +89,7 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Breaker")
 
+
     # image background
     img = pygame.image.load(BACKGROUND)
     screen.blit(img, (0, 0))
@@ -96,7 +99,6 @@ def main():
 
     brick_list = pygame.sprite.Group()
 
-
     start_ball = Ball(paddle.rect.centerx, paddle.rect.centery - 10)
     screen.blit(start_ball.image, start_ball.get_pos())
 
@@ -105,9 +107,6 @@ def main():
     pygame.display.flip()
 
     clock = pygame.time.Clock()
-
-    LEFT = 1
-
 
     prev_mouse_point = (0, 0)
     quit_game = False  # quit button was clicked
@@ -208,7 +207,7 @@ def main():
             break
         font = pygame.font.SysFont('ComicSansMS', 80)
         text = font.render('Play Again', True, BLACK, GREEN)
-        text_location=(screen.get_rect().centerx - text.get_rect().width / 2, 400)
+        text_location = (screen.get_rect().centerx - text.get_rect().width / 2, 400)
         screen.blit(text, text_location)
         pygame.display.flip()
 
@@ -221,8 +220,8 @@ def main():
                         break
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
                     pos = pygame.mouse.get_pos()
-                    if text.get_rect().left <= pos[0]-text_location[0] <= text.get_rect().right \
-                            and text.get_rect().top <= pos[1]-text_location[1] <= text.get_rect().bottom:
+                    if text.get_rect().left <= pos[0] - text_location[0] <= text.get_rect().right \
+                            and text.get_rect().top <= pos[1] - text_location[1] <= text.get_rect().bottom:
                         again = True
 
     pygame.quit()

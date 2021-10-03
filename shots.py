@@ -4,7 +4,7 @@ import random
 
 LAV = (200, 191, 231)  # lavender
 PINK = (255, 20, 147)
-MOVING_IMAGE = 'player.png'
+BALL = "images/ball.png"
 BALL_SPEED = 7
 
 
@@ -16,7 +16,7 @@ class BallError(Exception):
 class Ball(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Ball, self).__init__()
-        new_image = pygame.image.load(MOVING_IMAGE)  # .convert()# _alpha()
+        new_image = pygame.image.load(BALL)  # .convert()# _alpha()
         self.image = pygame.transform.scale(new_image, [20, 20]).convert()
         self.image.set_colorkey(LAV)
         self.rect = self.image.get_rect()
