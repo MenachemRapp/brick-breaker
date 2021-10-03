@@ -149,7 +149,7 @@ def main():
 
             if mouse_point != prev_mouse_point:
                 prev_mouse_point = mouse_point
-                paddle.update_loc(mouse_point[0] - 50)
+                paddle.update_loc(mouse_point[0] - paddle.rect.width/2)
 
             screen.blit(paddle.image, paddle.get_pos())
 
