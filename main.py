@@ -19,6 +19,7 @@ REFRESH_RATE = 60
 SOUND_FILE = "guitar.mp3"  # sound file
 MAX_VELOCITY = 7
 LEFT = 1
+RIGHT = 3
 
 NUMBER_OF_BRICKS_X = 12
 NUMBER_OF_BRICKS_Y = 8
@@ -74,6 +75,17 @@ def winning(screen):
     # TODO add "win" sound
 
 
+def pause(screen):
+    font = pygame.font.SysFont('ComicSansMS', 80)
+    text = font.render('Pause', True, BLACK, GREEN)
+    screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
+    pygame.display.flip()
+    while True:
+        event = pygame.event.get()
+        if any(map(lambda x: x.type == pygame.MOUSEBUTTONDOWN or x.type == pygame.KEYDOWN, event)):
+            return
+
+
 def main():
     # init class
     pygame.init()
@@ -88,7 +100,6 @@ def main():
     size = (WINDOW_WIDTH, WINDOW_HEIGHT)
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Breaker")
-
 
     # image background
     img = pygame.image.load(BACKGROUND)
@@ -133,14 +144,17 @@ def main():
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == LEFT:
                         ball_clicked = shoot(paddle, balls_list)
+                    elif event.button == RIGHT:
+                        pause(screen)
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         ball_clicked = shoot(paddle, balls_list)
-                    if event.key == pygame.K_a:
+                    elif event.key == pygame.K_a:
                         fill_bricks(brick_list)
                         brick_list.draw(screen)
-
+                    elif event.key == pygame.K_PAUSE:
+                        pause(screen)
             # reset background image
             screen.blit(img, (0, 0))
 
@@ -149,7 +163,7 @@ def main():
 
             if mouse_point != prev_mouse_point:
                 prev_mouse_point = mouse_point
-                paddle.update_loc(mouse_point[0] - paddle.rect.width/2)
+                paddle.update_loc(mouse_point[0] - paddle.rect.width / 2)
 
             screen.blit(paddle.image, paddle.get_pos())
 
