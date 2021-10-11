@@ -56,7 +56,7 @@ def ball_hit_brick(ball, brick):
         vertical_hit = True
     if ball.rect.centery <= brick.rect.top or ball.rect.centery >= brick.rect.bottom:
         horizontal_hit = True
-    ball.hit_brick(vertical_hit, horizontal_hit)
+    ball.hit_brick(vertical_hit, horizontal_hit, brick)
 
 
 def game_over(screen):

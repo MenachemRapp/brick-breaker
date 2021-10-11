@@ -20,11 +20,12 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(new_image, [20, 20]).convert()
         self.image.set_colorkey(LAV)
         self.rect = self.image.get_rect()
-        self.__vy = random.uniform(BALL_SPEED*0.1,BALL_SPEED*0.9)
+        self.__vy = random.uniform(BALL_SPEED * 0.1, BALL_SPEED * 0.9)
         abs_vx = math.sqrt(BALL_SPEED ** 2 - self.__vy ** 2)
-        self.__vx = random.choice([abs_vx,-abs_vx])
+        self.__vx = random.choice([abs_vx, -abs_vx])
         self.rect.x = x
         self.rect.y = y
+        self.last_object_hit = None
 
     def update_v(self, vx, vy):
         self.__vx = vx
@@ -49,17 +50,21 @@ class Ball(pygame.sprite.Sprite):
     def point_up(self):
         self.__vy = -abs(self.__vy)
 
-    def hit_brick(self, vertical_hit, horizontal_hit):
-        if vertical_hit:
-            self.flip_x_dir()
-        if horizontal_hit:
-            self.flip_y_dir()
+    def hit_brick(self, vertical_hit, horizontal_hit, object_hit):
+        if object_hit != self.last_object_hit:
+            self.last_object_hit = object_hit
+            if vertical_hit:
+                self.flip_x_dir()
+            if horizontal_hit:
+                self.flip_y_dir()
 
     def hit_side_border(self):
         self.flip_x_dir()
+        self.last_object_hit = "side"
 
     def hit_top_border(self):
         self.flip_y_dir()
+        self.last_object_hit = "top"
 
     @staticmethod
     def hit_bottom_border():
