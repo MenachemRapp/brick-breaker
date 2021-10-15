@@ -75,6 +75,27 @@ def winning(screen):
     # TODO add "win" sound
 
 
+def play_again_banner(screen):
+    font = pygame.font.SysFont('ComicSansMS', 80)
+    text = font.render('Play Again', True, BLACK, GREEN)
+    text_location = (screen.get_rect().centerx - text.get_rect().width / 2, 400)
+    screen.blit(text, text_location)
+    pygame.display.flip()
+
+    again = False
+    while not again:  # and not quit_game:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT:
+                    return True
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
+                pos = pygame.mouse.get_pos()
+                if text.get_rect().left <= pos[0] - text_location[0] <= text.get_rect().right \
+                        and text.get_rect().top <= pos[1] - text_location[1] <= text.get_rect().bottom:
+                    again = True
+    return False
+
+
 def pause(screen):
     font = pygame.font.SysFont('ComicSansMS', 80)
     text = font.render('Pause', True, BLACK, GREEN)
@@ -219,24 +240,8 @@ def main():
 
         if quit_game:
             break
-        font = pygame.font.SysFont('ComicSansMS', 80)
-        text = font.render('Play Again', True, BLACK, GREEN)
-        text_location = (screen.get_rect().centerx - text.get_rect().width / 2, 400)
-        screen.blit(text, text_location)
-        pygame.display.flip()
 
-        again = False
-        while not again and not quit_game:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    if event.type == pygame.QUIT:
-                        quit_game = True
-                        break
-                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
-                    pos = pygame.mouse.get_pos()
-                    if text.get_rect().left <= pos[0] - text_location[0] <= text.get_rect().right \
-                            and text.get_rect().top <= pos[1] - text_location[1] <= text.get_rect().bottom:
-                        again = True
+        quit_game = play_again_banner(screen)
 
     pygame.quit()
 
