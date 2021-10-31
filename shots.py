@@ -20,8 +20,9 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(new_image, [20, 20]).convert()
         self.image.set_colorkey(LAV)
         self.rect = self.image.get_rect()
-        self.__vy = random.uniform(BALL_SPEED * 0.1, BALL_SPEED * 0.9)
-        abs_vx = math.sqrt(BALL_SPEED ** 2 - self.__vy ** 2)
+        #TODO verify values will not be zero
+        self.__vy = round(random.uniform(BALL_SPEED * 0.1, BALL_SPEED * 0.9))
+        abs_vx = round(math.sqrt(BALL_SPEED ** 2 - self.__vy ** 2))
         self.__vx = random.choice([abs_vx, -abs_vx])
         self.rect.x = x
         self.rect.y = y
