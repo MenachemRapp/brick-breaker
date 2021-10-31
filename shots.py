@@ -50,6 +50,9 @@ class Ball(pygame.sprite.Sprite):
 
     def point_up(self):
         self.__vy = -abs(self.__vy)
+        
+    def point_down(self):
+        self.__vy = abs(self.__vy)
 
     def hit_brick(self, vertical_hit, horizontal_hit, object_hit):
         if object_hit != self.last_object_hit:
@@ -64,7 +67,7 @@ class Ball(pygame.sprite.Sprite):
         self.last_object_hit = "side"
 
     def hit_top_border(self):
-        self.flip_y_dir()
+        self.point_down()
         self.last_object_hit = "top"
 
     @staticmethod
