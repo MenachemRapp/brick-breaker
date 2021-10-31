@@ -21,11 +21,18 @@ class Ball(pygame.sprite.Sprite):
         self.image.set_colorkey(LAV)
         self.rect = self.image.get_rect()
         #TODO verify values will not be zero
-        self.__vy = round(random.uniform(BALL_SPEED * 0.1, BALL_SPEED * 0.9))
-        abs_vx = round(math.sqrt(BALL_SPEED ** 2 - self.__vy ** 2))
+        self.__vy = random.uniform(BALL_SPEED * 0.1, BALL_SPEED * 0.9)
+        abs_vx = math.sqrt(BALL_SPEED ** 2 - self.__vy ** 2)
         self.__vx = random.choice([abs_vx, -abs_vx])
-        self.rect.x = x
-        self.rect.y = y
+        
+        """ "rect" only uses int values. If we will use onle round int values
+        the balls will run into loops. Therfore, we want to use real/float
+        values and later cobert them to integers
+        """
+        self.real_x = x
+        self.real_y = y
+        self.rect.x = self.real_x
+        self.rect.y = self.real_y
         self.last_object_hit = None
 
     def update_v(self, vx, vy):
@@ -33,8 +40,14 @@ class Ball(pygame.sprite.Sprite):
         self.__vy = vy
 
     def update_loc(self):
-        self.rect.x += self.__vx
-        self.rect.y += self.__vy
+        # float values
+        self.real_x += self.__vx
+        self.real_y += self.__vy
+        
+        #int values
+        self.rect.x = self.real_x
+        self.rect.y = self.real_y
+        
 
     def get_pos(self):
         return self.rect.x, self.rect.y
