@@ -85,5 +85,3 @@ class Ball(pygame.sprite.Sprite):
     @staticmethod
     def hit_bottom_border():
         raise BallError("ball has left the border")
-
-    # def ball_removed(self):

@@ -138,10 +138,11 @@ def pause(screen):
             return
 
 
-def main():
-    # init class
-    pygame.init()
-
+def init_screen():
+    """
+    first screen setup
+    :return: screen , background image, paddle, ball on paddle
+    """
     # set screen
     size = (WINDOW_WIDTH, WINDOW_HEIGHT)
     screen = pygame.display.set_mode(size)
@@ -151,18 +152,40 @@ def main():
     img = pygame.image.load(BACKGROUND)
     screen.blit(img, (0, 0))
 
+    # init paddle
     paddle = Paddle(250, 500)
     screen.blit(paddle.image, paddle.get_pos)
 
-    brick_list = pygame.sprite.Group()
-
-    start_ball = Ball(paddle.rect.centerx, paddle.rect.centery - 10)
+    # set ball on paddle
+    start_ball = Ball(paddle.rect.centerx, paddle.rect.centery - paddle.rect.height)
     screen.blit(start_ball.image, start_ball.get_pos())
 
-    balls_list = pygame.sprite.Group()
-
+    # display screen
     pygame.display.flip()
 
+    return screen, img, paddle, start_ball
+
+
+def end_game(ball_list, brick_list, screen):
+    if not ball_list:
+        game_over(screen)
+        return True
+        win_or_loose = True
+
+    if not list(filter(lambda x: x.required, brick_list)):
+        winning(screen)
+        return True
+        win_or_loose = True
+
+    return False
+
+
+def main():
+    # init objects
+    pygame.init()
+    brick_list = pygame.sprite.Group()
+    balls_list = pygame.sprite.Group()
+    screen, img, paddle, start_ball = init_screen()
     clock = pygame.time.Clock()
 
     prev_mouse_point = (0, 0)
@@ -217,6 +240,7 @@ def main():
             if not ball_clicked:
                 screen.blit(start_ball.image, (paddle.rect.centerx - 10, paddle.rect.centery - 20))
 
+            # set ball location and test if the ball is within the screen borders
             for ball in balls_list:
                 ball.update_loc()
                 if ball.rect.center[0] > WINDOW_WIDTH or ball.rect.center[0] < 0:
@@ -244,22 +268,19 @@ def main():
                     except BrickError:
                         brick_list.remove(brick)
 
+            # ball hit paddle
             ball_paddle_hit_list = pygame.sprite.spritecollide(paddle, balls_list, False)
             for ball in ball_paddle_hit_list:
                 ball.point_up()
 
+            # draw screen
             balls_list.draw(screen)
             brick_list.draw(screen)
-
             pygame.display.flip()
 
-            if ball_clicked and not balls_list:
-                game_over(screen)
-                win_or_loose = True
-
-            if not list(filter(lambda x: x.required, brick_list)):
-                winning(screen)
-                win_or_loose = True
+            # end game
+            if ball_clicked:
+                win_or_loose = end_game(balls_list, brick_list, screen)
 
             clock.tick(REFRESH_RATE)
 
