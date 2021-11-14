@@ -20,14 +20,14 @@ class Ball(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(new_image, [20, 20]).convert()
         self.image.set_colorkey(LAV)
         self.rect = self.image.get_rect()
-        #TODO verify values will not be zero
+        # TODO verify values will not be zero
         self.__vy = random.uniform(BALL_SPEED * 0.1, BALL_SPEED * 0.9)
         abs_vx = math.sqrt(BALL_SPEED ** 2 - self.__vy ** 2)
         self.__vx = random.choice([abs_vx, -abs_vx])
-        
-        """ "rect" only uses int values. If we will use onle round int values
-        the balls will run into loops. Therfore, we want to use real/float
-        values and later cobert them to integers
+
+        """ "rect" only uses int values. If we will use only round int values
+        the balls will run into loops. Therefore, we want to use real/float
+        values and later convert them to integers
         """
         self.real_x = x
         self.real_y = y
@@ -43,11 +43,10 @@ class Ball(pygame.sprite.Sprite):
         # float values
         self.real_x += self.__vx
         self.real_y += self.__vy
-        
-        #int values
+
+        # int values
         self.rect.x = self.real_x
         self.rect.y = self.real_y
-        
 
     def get_pos(self):
         return self.rect.x, self.rect.y
@@ -63,7 +62,7 @@ class Ball(pygame.sprite.Sprite):
 
     def point_up(self):
         self.__vy = -abs(self.__vy)
-        
+
     def point_down(self):
         self.__vy = abs(self.__vy)
 

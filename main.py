@@ -1,7 +1,3 @@
-import random
-
-import pygame
-import math
 from shots import *
 from targets import *
 from paddles import Paddle
@@ -28,29 +24,46 @@ DISTANCE_Y = 20
 
 
 def fill_bricks(brick_list):
+    """
+    fill the screen with the bricks
+    :param brick_list: list of bricks
+    """
     brick_options = [GreenBrick, RedBrick, CyanBrick]
+
+    # empty all bricks
     brick_list.empty()
+
+    # fill all regular bricks
     for i in range(NUMBER_OF_BRICKS_X):
         for j in range(NUMBER_OF_BRICKS_Y):
             brick = brick_options[(i + j) % len(brick_options)](i * DISTANCE_X, j * DISTANCE_Y)
             brick_list.add(brick)
 
+    # add permanent bricks
     for i in range(4):
         brick = PermanentBrick(DISTANCE_X + i * DISTANCE_X * 3, DISTANCE_Y * NUMBER_OF_BRICKS_Y)
         brick_list.add(brick)
 
 
 def shoot(paddle, balls_list):
+    """
+    add a new ball
+    :param paddle: sprite of the paddle
+    :param balls_list: list of all balls
+    :return: true
+    """
     x, y = paddle.rect.center
     ball = Ball(x, y - 10)
-    vx = random.randint(-MAX_VELOCITY, MAX_VELOCITY)
-    vy = random.randint(-MAX_VELOCITY, -1)
-    # ball.update_v(vx, vy)
     balls_list.add(ball)
     return True
 
 
 def ball_hit_brick(ball, brick):
+    """
+    determine how did the ball hit the brick
+    :param ball:
+    :param brick:
+    """
     horizontal_hit = vertical_hit = False
     if ball.rect.centerx <= brick.rect.left or ball.rect.centerx >= brick.rect.right:
         vertical_hit = True
@@ -60,6 +73,10 @@ def ball_hit_brick(ball, brick):
 
 
 def game_over(screen):
+    """
+    generate a "game over" screen
+    :param screen: game screen
+    """
     font = pygame.font.SysFont('ComicSansMS', 80)
     text = font.render('Game Over', True, RED, BLUE)
     screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
@@ -68,6 +85,10 @@ def game_over(screen):
 
 
 def winning(screen):
+    """
+    generate a "winning" screen
+    :param screen: game screen
+    """
     font = pygame.font.SysFont('ComicSansMS', 80)
     text = font.render('You Won', True, RED, BLUE)
     screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
@@ -76,6 +97,11 @@ def winning(screen):
 
 
 def play_again_banner(screen):
+    """
+    generate a "play again" screen
+    :param screen: game screen
+    :return: whether the "quit" button was clicked
+    """
     font = pygame.font.SysFont('ComicSansMS', 80)
     text = font.render('Play Again', True, BLACK, GREEN)
     text_location = (screen.get_rect().centerx - text.get_rect().width / 2, 400)
@@ -97,6 +123,11 @@ def play_again_banner(screen):
 
 
 def pause(screen):
+    """
+    generate a "pause screen"
+    :param screen: game screen
+    :return: return from function when any button was clicked
+    """
     font = pygame.font.SysFont('ComicSansMS', 80)
     text = font.render('Pause', True, BLACK, GREEN)
     screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
@@ -111,12 +142,6 @@ def main():
     # init class
     pygame.init()
 
-    """
-    # sound init
-    pygame.mixer.init()
-    pygame.mixer.music.load(SOUND_FILE)
-    """
-
     # set screen
     size = (WINDOW_WIDTH, WINDOW_HEIGHT)
     screen = pygame.display.set_mode(size)
@@ -127,7 +152,7 @@ def main():
     screen.blit(img, (0, 0))
 
     paddle = Paddle(250, 500)
-    screen.blit(paddle.image, paddle.get_pos())
+    screen.blit(paddle.image, paddle.get_pos)
 
     brick_list = pygame.sprite.Group()
 
@@ -186,7 +211,7 @@ def main():
                 prev_mouse_point = mouse_point
                 paddle.update_loc(mouse_point[0] - paddle.rect.width / 2)
 
-            screen.blit(paddle.image, paddle.get_pos())
+            screen.blit(paddle.image, paddle.get_pos)
 
             # display the starting position of the ball
             if not ball_clicked:

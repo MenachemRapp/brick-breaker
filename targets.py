@@ -18,7 +18,7 @@ class BrickError(Exception):
 
 class Brick(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super(Brick, self).__init__()
+        super(Brick, self).__init__(x, y)
 
     def set_surface(self, my_image, x, y):
         self.image = pygame.image.load(my_image).convert()
@@ -47,10 +47,12 @@ class GreenBrick(BasicBrick):
         super(GreenBrick, self).__init__(x, y)
         super().set_surface(GREEN_BRICK, x, y)
 
+
 class RedBrick(BasicBrick):
     def __init__(self, x, y):
         super(RedBrick, self).__init__(x, y)
         super().set_surface(RED_BRICK, x, y)
+
 
 class CyanBrick(BasicBrick):
     def __init__(self, x, y):

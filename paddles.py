@@ -2,7 +2,7 @@ import pygame
 
 LAV = (200, 191, 231)  # lavender
 PINK = (255, 20, 147)
-BLACK = (0,0,0)
+BLACK = (0, 0, 0)
 
 PADDLE = 'images/paddle.png'
 HORIZONTAL_VELOCITY = 3
@@ -28,11 +28,12 @@ class Paddle(pygame.sprite.Sprite):
     def move_left(self):
         self.rect.x -= self.__speed
 
+    @property
     def get_pos(self):
         return self.rect.x, self.rect.y
 
     def get_speed(self):
         return self.__speed
 
-    def update_loc(self,x):
+    def update_loc(self, x):
         self.rect.x = x
