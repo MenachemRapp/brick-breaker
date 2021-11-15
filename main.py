@@ -5,15 +5,12 @@ from paddles import Paddle
 # screen params
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 600
-WHITE = (255, 255, 255)
+
 RED = (255, 0, 0)
-LAV = (200, 191, 231)  # lavender
 BLUE = (0, 0, 128)
 GREEN = (42, 249, 7)
 BACKGROUND = "images/tiles.png"  # background image
 REFRESH_RATE = 60
-SOUND_FILE = "guitar.mp3"  # sound file
-MAX_VELOCITY = 7
 LEFT = 1
 RIGHT = 3
 
@@ -167,17 +164,63 @@ def init_screen():
 
 
 def end_game(ball_list, brick_list, screen):
+    """
+    set ending screen
+    :param ball_list: group of balls
+    :param brick_list: group of bricks
+    :param screen: game screen
+    :return: True if game is over
+    """
     if not ball_list:
         game_over(screen)
         return True
-        win_or_loose = True
 
     if not list(filter(lambda x: x.required, brick_list)):
         winning(screen)
         return True
-        win_or_loose = True
 
     return False
+
+
+def clicked_button_action(screen, brick_list, balls_list, paddle):
+    """
+    do action when any button is clicked
+    :param screen: game screen
+    :param brick_list: group of bricks
+    :param balls_list: group of balls
+    :param paddle: game paddle
+    :return: quit game, new ball was shot now
+    """
+    # init variables
+    quit_game, ball_clicked = False, False
+
+    # enables position to move continuously with the keyboard
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_RIGHT]:
+        paddle.move_right()
+    if keys[pygame.K_LEFT]:
+        paddle.move_left()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            quit_game = True
+            break
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == LEFT:
+                ball_clicked = shoot(paddle, balls_list)
+            elif event.button == RIGHT:
+                pause(screen)
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                ball_clicked = shoot(paddle, balls_list)
+            elif event.key == pygame.K_a:
+                fill_bricks(brick_list)
+                brick_list.draw(screen)
+            elif event.key == pygame.K_PAUSE:
+                pause(screen)
+
+    return quit_game, ball_clicked
 
 
 def main():
@@ -199,37 +242,18 @@ def main():
         win_or_loose = False
         while not quit_game and not win_or_loose:
 
-            # enables position to move continuously with the keyboard
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_RIGHT]:
-                paddle.move_right()
-            if keys[pygame.K_LEFT]:
-                paddle.move_left()
+            # act according to the clicked button
+            quit_game, ball_clicked_now = clicked_button_action(screen, brick_list, balls_list, paddle)
+            if ball_clicked_now:
+                ball_clicked = True
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    quit_game = True
-                    break
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == LEFT:
-                        ball_clicked = shoot(paddle, balls_list)
-                    elif event.button == RIGHT:
-                        pause(screen)
-
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        ball_clicked = shoot(paddle, balls_list)
-                    elif event.key == pygame.K_a:
-                        fill_bricks(brick_list)
-                        brick_list.draw(screen)
-                    elif event.key == pygame.K_PAUSE:
-                        pause(screen)
             # reset background image
             screen.blit(img, (0, 0))
 
             # show mouse's current location
             mouse_point = pygame.mouse.get_pos()
 
+            # display paddle
             if mouse_point != prev_mouse_point:
                 prev_mouse_point = mouse_point
                 paddle.update_loc(mouse_point[0] - paddle.rect.width / 2)
@@ -273,7 +297,7 @@ def main():
             for ball in ball_paddle_hit_list:
                 ball.point_up()
 
-            # draw screen
+            # draw balls and bricks on the screen
             balls_list.draw(screen)
             brick_list.draw(screen)
             pygame.display.flip()
