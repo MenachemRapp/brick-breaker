@@ -5,6 +5,7 @@ from paddles import Paddle
 # screen params
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 600
+INSTRUCTIONS_RECT = (80, 200, 450, 150)
 
 # colors
 RED = (255, 0, 0)
@@ -12,10 +13,12 @@ BLUE = (0, 0, 128)
 GREEN = (42, 249, 7)
 BLACK = (0, 0, 0)
 LAV = (200, 191, 231)  # lavender
+OFF_WHITE = (245, 240, 220)
 
-# images
+# files
 BACKGROUND = "images/tiles.png"  # background image
 ICON = "images/icon.png"
+INSTRUCTIONS = "text/instructions.txt"
 
 # mouse buttons
 LEFT = 1
@@ -129,18 +132,50 @@ def play_again_banner(screen):
 
 def pause(screen):
     """
-    generate a "pause screen"
+    generate a "pause screen" with instructions
     :param screen: game screen
-    :return: return from function when any button was clicked
+    :return: return from function when any button was clicked.
+    Return "true" if the "quit" button was clicked
     """
+
+    # draw a rectangle with the instructions
+    pygame.draw.rect(screen, OFF_WHITE, INSTRUCTIONS_RECT)
+    with open(INSTRUCTIONS, 'r') as input_file:
+        instructions = input_file.read().splitlines()
+        for index, line in enumerate(instructions[:-1]):
+            line_list = line.split('\t')
+            font = pygame.font.SysFont('Times', 20)
+
+            if index == 0:  # underline title
+                font.set_underline(True)
+            else:  # the rest of the lines should have dashes from the key to the action
+                dashes = font.render("-" * 45, True, BLACK, OFF_WHITE)
+                screen.blit(dashes, (INSTRUCTIONS_RECT[0] + 20, INSTRUCTIONS_RECT[1] + index * key.get_rect().height))
+
+            # draw key
+            key = font.render(line_list[0], True, BLACK, OFF_WHITE)
+            screen.blit(key, (INSTRUCTIONS_RECT[0] + 20, INSTRUCTIONS_RECT[1] + index * key.get_rect().height))
+
+            # draw action
+            action = font.render(line_list[1], True, BLACK, OFF_WHITE)
+            screen.blit(action, (INSTRUCTIONS_RECT[0] + 320, INSTRUCTIONS_RECT[1] + index * key.get_rect().height))
+
+        # draw "click any ket to continue"
+        any_key = font.render(instructions[-1], True, BLACK, OFF_WHITE)
+        screen.blit(any_key, (INSTRUCTIONS_RECT[0] + 100, INSTRUCTIONS_RECT[1] + (index + 1.5) * key.get_rect().height))
+
+    # draw "Pause" banner
     font = pygame.font.SysFont('ComicSansMS', 80)
-    text = font.render('Pause', True, BLACK, GREEN)
-    screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 100))
+    text = font.render("Pause", True, BLACK, GREEN)
+    screen.blit(text, (screen.get_rect().centerx - text.get_rect().width / 2, 60))
+
     pygame.display.flip()
     while True:
         event = pygame.event.get()
-        if any(map(lambda x: x.type == pygame.MOUSEBUTTONDOWN or x.type == pygame.KEYDOWN, event)):
-            return
+        if [x for x in event if x.type == pygame.QUIT]:
+            return True
+        if [x for x in event if x.type == pygame.MOUSEBUTTONDOWN or x.type == pygame.KEYDOWN]:
+            return False
 
 
 def init_screen():
@@ -220,7 +255,7 @@ def clicked_button_action(screen, brick_list, balls_list, paddle):
             if event.button == LEFT:
                 ball_clicked = shoot(paddle, balls_list)
             elif event.button == RIGHT:
-                pause(screen)
+                quit_game = pause(screen)
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
@@ -229,7 +264,7 @@ def clicked_button_action(screen, brick_list, balls_list, paddle):
                 fill_bricks(brick_list)
                 brick_list.draw(screen)
             elif event.key == pygame.K_PAUSE:
-                pause(screen)
+                quit_game = pause(screen)
 
     return quit_game, ball_clicked
 

@@ -1,0 +1,6 @@
+Key	Action
+Right and Left Keys	move paddle
+Space / Left Mouse Button	shoot
+Pause / Right Mouse Button	pause
+A	reset bricks
+Click Any Key to Continue
