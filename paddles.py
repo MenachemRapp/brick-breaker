@@ -1,19 +1,13 @@
 import pygame
 
-LAV = (200, 191, 231)  # lavender
-PINK = (255, 20, 147)
-BLACK = (0, 0, 0)
-
 PADDLE = 'images/paddle.png'
 HORIZONTAL_VELOCITY = 3
-VERTICAL_VELOCITY = 5
 
 
 class Paddle(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Paddle, self).__init__()
         self.image = pygame.image.load(PADDLE).convert()
-        self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
