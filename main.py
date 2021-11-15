@@ -6,15 +6,22 @@ from paddles import Paddle
 WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 600
 
+# colors
 RED = (255, 0, 0)
 BLUE = (0, 0, 128)
 GREEN = (42, 249, 7)
 BLACK = (0, 0, 0)
+LAV = (200, 191, 231)  # lavender
+
+# images
 BACKGROUND = "images/tiles.png"  # background image
-REFRESH_RATE = 60
+ICON = "images/icon.png"
+
+# mouse buttons
 LEFT = 1
 RIGHT = 3
 
+REFRESH_RATE = 60
 NUMBER_OF_BRICKS_X = 12
 NUMBER_OF_BRICKS_Y = 8
 DISTANCE_X = 50
@@ -145,6 +152,9 @@ def init_screen():
     size = (WINDOW_WIDTH, WINDOW_HEIGHT)
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Breaker")
+    icon = pygame.image.load(ICON)
+    icon.set_colorkey(LAV)
+    pygame.display.set_icon(icon)
 
     # image background
     img = pygame.image.load(BACKGROUND)
