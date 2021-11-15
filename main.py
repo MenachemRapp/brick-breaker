@@ -1,6 +1,7 @@
 from shots import *
 from targets import *
 from paddles import Paddle
+from levels import *
 
 # screen params
 WINDOW_WIDTH = 600
@@ -25,12 +26,14 @@ LEFT = 1
 RIGHT = 3
 
 REFRESH_RATE = 60
+LEVEL = level1
 NUMBER_OF_BRICKS_X = 12
 NUMBER_OF_BRICKS_Y = 8
 DISTANCE_X = 50
 DISTANCE_Y = 20
 
 
+# TODO use only the levels functions
 def fill_bricks(brick_list):
     """
     fill the screen with the bricks
@@ -280,7 +283,7 @@ def main():
     prev_mouse_point = (0, 0)
     quit_game = False  # quit button was clicked
     while not quit_game:
-        fill_bricks(brick_list)
+        brick_list = LEVEL()
         brick_list.draw(screen)
         balls_list.empty()
 
