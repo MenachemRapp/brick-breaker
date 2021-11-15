@@ -1,14 +1,9 @@
 import pygame
 
-LAV = (200, 191, 231)  # lavender
-PINK = (255, 20, 147)
-BLACK = (0, 0, 0)
 GREEN_BRICK = 'images/green_brick.png'
 RED_BRICK = 'images/red_brick.png'
 CYAN_BRICK = 'images/cyan_brick.png'
 BLACK_BRICK = 'images/black_brick.png'
-HORIZONTAL_VELOCITY = 3
-VERTICAL_VELOCITY = 5
 
 
 class BrickError(Exception):
@@ -17,7 +12,7 @@ class BrickError(Exception):
 
 
 class Brick(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self):
         super(Brick, self).__init__()
 
     def set_surface(self, my_image, x, y):
@@ -29,13 +24,10 @@ class Brick(pygame.sprite.Sprite):
     def get_pos(self):
         return self.rect.x, self.rect.y
 
-    def hit_action(self):
-        pass
-
 
 class BasicBrick(Brick):
-    def __init__(self, x, y):
-        super(BasicBrick, self).__init__(x,y)
+    def __init__(self):
+        super(BasicBrick, self).__init__()
         self.required = True
 
     def hit_action(self):
@@ -44,27 +36,27 @@ class BasicBrick(Brick):
 
 class GreenBrick(BasicBrick):
     def __init__(self, x, y):
-        super(GreenBrick, self).__init__(x, y)
+        super(GreenBrick, self).__init__()
         super().set_surface(GREEN_BRICK, x, y)
 
 
 class RedBrick(BasicBrick):
     def __init__(self, x, y):
-        super(RedBrick, self).__init__(x, y)
+        super(RedBrick, self).__init__()
         super().set_surface(RED_BRICK, x, y)
 
 
 class CyanBrick(BasicBrick):
     def __init__(self, x, y):
-        super(CyanBrick, self).__init__(x, y)
+        super(CyanBrick, self).__init__()
         super().set_surface(CYAN_BRICK, x, y)
 
 
 class PermanentBrick(Brick):
     def __init__(self, x, y):
-        super(PermanentBrick, self).__init__(x, y)
+        super(PermanentBrick, self).__init__()
         super().set_surface(BLACK_BRICK, x, y)
         self.required = False
 
-    def hit_action(self):
+    def hit_action(self):  # brick should remain after getting hit
         pass

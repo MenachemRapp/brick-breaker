@@ -9,6 +9,7 @@ WINDOW_HEIGHT = 600
 RED = (255, 0, 0)
 BLUE = (0, 0, 128)
 GREEN = (42, 249, 7)
+BLACK = (0, 0, 0)
 BACKGROUND = "images/tiles.png"  # background image
 REFRESH_RATE = 60
 LEFT = 1
