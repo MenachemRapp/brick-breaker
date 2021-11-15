@@ -278,8 +278,10 @@ def main():
             # set ball location and test if the ball is within the screen borders
             for ball in balls_list:
                 ball.update_loc()
-                if ball.rect.center[0] > WINDOW_WIDTH or ball.rect.center[0] < 0:
-                    ball.hit_side_border()
+                if ball.rect.center[0] > WINDOW_WIDTH:
+                    ball.hit_side_border("right")
+                if ball.rect.center[0] < 0:
+                    ball.hit_side_border("left")
                 if ball.rect.y + 10 < 0:
                     ball.hit_top_border()
                 if ball.rect.y - 20 > WINDOW_HEIGHT:

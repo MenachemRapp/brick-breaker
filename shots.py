@@ -89,6 +89,20 @@ class Ball(pygame.sprite.Sprite):
         """
         self.__vy = abs(self.__vy)
 
+
+    def point_right(self):
+        """
+        flip ball so it will point up
+        """
+        self.__vx = abs(self.__vx)
+
+    def point_left(self):
+        """
+        flip ball so it will point down
+        """
+        self.__vx = -abs(self.__vx)
+
+
     def hit_brick(self, vertical_hit, horizontal_hit, object_hit):
         """
         action when ball hits a brick
@@ -103,11 +117,15 @@ class Ball(pygame.sprite.Sprite):
             if horizontal_hit:
                 self.flip_y_dir()
 
-    def hit_side_border(self):
+    def hit_side_border(self, side_name):
         """
         action when the ball hits the side border
         """
-        self.flip_x_dir()
+        if side_name == "right":
+            self.point_left()
+        elif side_name == "left":
+            self.point_right()
+
         self.last_object_hit = "side"
 
     def hit_top_border(self):
