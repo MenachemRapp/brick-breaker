@@ -13,7 +13,7 @@ class Paddle(pygame.sprite.Sprite):
         self.rect.y = y
         self.__speed = HORIZONTAL_VELOCITY
 
-    def update_speed(self, speed):
+    def update_speed(self, speed):  # not used yet
         self.__speed = speed
 
     def move_right(self):
