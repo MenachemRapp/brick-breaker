@@ -152,7 +152,7 @@ def init_screen():
 
     # init paddle
     paddle = Paddle(250, 500)
-    screen.blit(paddle.image, paddle.get_pos)
+    screen.blit(paddle.image, paddle.get_pos())
 
     # set ball on paddle
     start_ball = Ball(paddle.rect.centerx, paddle.rect.centery - paddle.rect.height)
@@ -259,7 +259,7 @@ def main():
                 prev_mouse_point = mouse_point
                 paddle.update_loc(mouse_point[0] - paddle.rect.width / 2)
 
-            screen.blit(paddle.image, paddle.get_pos)
+            screen.blit(paddle.image, paddle.get_pos())
 
             # display the starting position of the ball
             if not ball_clicked:

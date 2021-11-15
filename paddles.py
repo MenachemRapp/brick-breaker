@@ -22,7 +22,6 @@ class Paddle(pygame.sprite.Sprite):
     def move_left(self):
         self.rect.x -= self.__speed
 
-    @property
     def get_pos(self):
         return self.rect.x, self.rect.y
 
