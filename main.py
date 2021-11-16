@@ -27,33 +27,6 @@ RIGHT = 3
 
 REFRESH_RATE = 60
 LEVEL = level1
-NUMBER_OF_BRICKS_X = 12
-NUMBER_OF_BRICKS_Y = 8
-DISTANCE_X = 50
-DISTANCE_Y = 20
-
-
-# TODO use only the levels functions
-def fill_bricks(brick_list):
-    """
-    fill the screen with the bricks
-    :param brick_list: list of bricks
-    """
-    brick_options = [GreenBrick, RedBrick, CyanBrick]
-
-    # empty all bricks
-    brick_list.empty()
-
-    # fill all regular bricks
-    for i in range(NUMBER_OF_BRICKS_X):
-        for j in range(NUMBER_OF_BRICKS_Y):
-            brick = brick_options[(i + j) % len(brick_options)](i * DISTANCE_X, j * DISTANCE_Y)
-            brick_list.add(brick)
-
-    # add permanent bricks
-    for i in range(4):
-        brick = PermanentBrick(DISTANCE_X + i * DISTANCE_X * 3, DISTANCE_Y * NUMBER_OF_BRICKS_Y)
-        brick_list.add(brick)
 
 
 def shoot(paddle, balls_list):
@@ -264,7 +237,8 @@ def clicked_button_action(screen, brick_list, balls_list, paddle):
             if event.key == pygame.K_SPACE:
                 ball_clicked = shoot(paddle, balls_list)
             elif event.key == pygame.K_a:
-                fill_bricks(brick_list)
+                brick_list.empty()
+                brick_list.add(LEVEL())
                 brick_list.draw(screen)
             elif event.key == pygame.K_PAUSE:
                 quit_game = pause(screen)
