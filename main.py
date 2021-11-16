@@ -49,10 +49,15 @@ def ball_hit_brick(ball, brick):
     :param brick:
     """
     horizontal_hit = vertical_hit = False
-    if ball.rect.centerx <= brick.rect.left or ball.rect.centerx >= brick.rect.right:
-        vertical_hit = True
-    if ball.rect.centery <= brick.rect.top or ball.rect.centery >= brick.rect.bottom:
-        horizontal_hit = True
+    if ball.rect.centerx <= brick.rect.left:
+        horizontal_hit = "left"
+    elif brick.rect.right <= ball.rect.centerx:
+        horizontal_hit = "right"
+
+    if ball.rect.centery <= brick.rect.top:
+        vertical_hit = "top"
+    elif brick.rect.bottom <= ball.rect.centery:
+        vertical_hit = "bottom"
     ball.hit_brick(vertical_hit, horizontal_hit, brick)
 
 
