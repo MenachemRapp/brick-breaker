@@ -17,7 +17,7 @@ LAV = (200, 191, 231)  # lavender
 OFF_WHITE = (245, 240, 220)
 
 # files
-BACKGROUND = "images/tiles.png"  # background image
+BACKGROUND = "images/room.png"  # background image
 ICON = "images/icon.png"
 INSTRUCTIONS = "text/instructions.txt"
 
